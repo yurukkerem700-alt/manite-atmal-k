@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebrar'a Özel ❤️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe5ec, #ffb3c6);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Arka Plan Efektleri */
+        .heart-particle {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatUp 4s linear infinite;
+            z-index: 1;
+        }
+
+        .flower-particle {
+            position: absolute;
+            font-size: 28px;
+            pointer-events: none;
+            animation: flowerUp 6s linear infinite;
+            bottom: -50px;
+            z-index: 1;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.5); opacity: 0; }
+        }
+
+        @keyframes flowerUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(180deg); opacity: 0; }
+        }
+
+        /* Ana Konteyner */
+        .container {
+            z-index: 10;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Zarf Tasarımı */
+        .envelope-wrapper {
+            cursor: pointer;
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background-color: #f07167;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid #f07167;
+            transform-origin: top;
+            transition: transform 0.4s 0.2s;
+        }
+
+        .envelope-wrapper.open::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-back {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid #df5e54;
+            border-right: 140px solid #df5e54;
+            border-bottom: 90px solid #df5e54;
+            border-top: 90px solid transparent;
+            border-radius: 10px;
+        }
+
+        .click-me-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            color: #ff4d6d;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 20px;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 5;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Zarfın İçinden Çıkan Kalp */
+        .rising-heart {
+            position: absolute;
+            top: 30%;
+            left: 42%;
+            font-size: 50px;
+            opacity: 0;
+            z-index: 1;
+            transition: all 1s ease-in-out;
+            pointer-events: none;
+        }
+
+        .rising-heart.fly {
+            opacity: 1;
+            transform: translateY(-150px) scale(2.5);
+        }
+
+        /* Soru Kartı Yapısı */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            z-index: 20;
+            border: 2px solid #ffccd5;
+        }
+
+        .card h2 {
+            color: #ff4d6d;
+            font-size: 24px;
+            line-height: 1.4;
+        }
+
+        .progress {
+            font-size: 14px;
+            color: #a7a7a7;
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff4d6d, #ff758f);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        .btn-no {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        /* Kaçan Buton İçin Stil */
+        .btn-no.runaway {
+            position: fixed;
+            z-index: 9999;
+            transition: left 0.1s ease, top 0.1s ease;
+        }
+
+        /* Tebrik/Son Ekran */
+        .success-screen {
+            display: none;
+            text-align: center;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            border: 3px dashed #ff4d6d;
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-screen h1 {
+            color: #ff4d6d;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .success-screen p {
+            color: #495057;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <!-- Zarf Yapısı -->
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <button class="click-me-btn">Buraya Bas</button>
+            <div class="envelope-back"></div>
+            <div class="rising-heart" id="risingHeart">❤️</div>
+        </div>
+
+        <!-- Soru Kartı -->
+        <div class="card" id="questionCard">
+            <div class="progress" id="progressText">Soru 1 / 10</div>
+            <h2 id="questionText">Soru buraya gelecek?</h2>
+            <div class="btn-group">
+                <button class="btn btn-yes" id="yesBtn" onclick="nextQuestion()">Evet</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="escapeButton()" onclick="escapeButton()">Hayır</button>
+            </div>
+        </div>
+
+        <!-- Son Ekran -->
+        <div class="success-screen" id="successScreen">
+            <h1>Seni Çok Seviyorum Ebrar! ❤️</h1>
+            <p>Dünyanın en mutlu insanı yaptın beni. İyi ki varsın, hayatımın anlamı!</p>
+        </div>
+    </div>
+
+    <script>
+        // Sorular Listesi
+        const questions = [
+            "Benimle vakit geçirmeyi seviyor musun Ebrar? 😊",
+            "Sence de birlikte çok eğleniyor muyuz? 🍕",
+            "Sana her baktığımda içimin eridiğinin farkında mısın? 🥺",
+            "Birlikte daha çok anı biriktirelim mi? 📸",
+            "Attığım saçma mesajlara bile gülebiliyor musun? 🤭",
+            "Hayatında olduğum için azıcık da olsa mutlu musun? ✨",
+            "Seninle uzun uzun yürüyüşler yapalım mı? 🌙",
+            "En sevdiğin insan listesinde ilk sıralarda mıyım? 🥇",
+            "Seni her gün daha çok seveceğime inanıyor musun? 🌹",
+            "Ebrar, benimle sevgili olur musun? ❤️" // 10. Soru
+        ];
+
+        // Israr Cümleleri (Son soruda hayıra tıklanmaya çalışılırsa çıkacak)
+        const insistPhrases = [
+            "Yaa kaçma benden, Evet de! 🥺",
+            "Hayır butonunu kilitledim ki, boşuna uğraşma! 😜",
+            "Ebrar lütfen ama, kaderimiz bu bizim! ✨",
+            "Bu butonun senden kaçtığı kadar ben de sana koşuyorum! 💕",
+            "Yaaa bir şans ver ama, çok mutlu olacağız! 🌹",
+            "Hayır seçeneği teknik olarak devre dışı bırakıldı! 🥰"
+        ];
+
+        let currentQuestionIndex = 0;
+        let insistIndex = 0;
+
+        // Sayfa açıldığında otomatik kalpler ve çiçekler fırlatır
+        window.onload = function() {
+            createHearts();
+            createFlowers();
+        };
+
+        function createHearts() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart-particle');
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 150);
+            }
+        }
+
+        function createFlowers() {
+            const flowers = ['🌸', '🌹', '🌺', '🌷', '💐'];
+            setInterval(() => {
+                const flower = document.createElement('div');
+                flower.classList.add('flower-particle');
+                flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                document.body.appendChild(flower);
+
+                setTimeout(() => flower.remove(), 7000);
+            }, 300);
+        }
+
+        // Zarf Açılma İşlemi
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const risingHeart = document.getElementById('risingHeart');
+            const card = document.getElementById('questionCard');
+
+            envelope.classList.add('open');
+            risingHeart.classList.add('fly');
+
+            // Zarf küçülerek kaybolur ve sorular gelir
+            setTimeout(() => {
+                envelope.style.display = 'none';
+                card.style.display = 'flex';
+                showQuestion();
+            }, 1200);
+        }
+
+        // Soru Gösterimi
+        function showQuestion() {
+            document.getElementById('progressText').innerText = `Soru ${currentQuestionIndex + 1} / 10`;
+            document.getElementById('questionText').innerText = questions[currentQuestionIndex];
+            
+            // Son soruda değilse hayır butonu normal durur, son soruda kaçmaya başlar
+            const noBtn = document.getElementById('noBtn');
+            if (currentQuestionIndex === 9) {
+                noBtn.classList.add('runaway');
+            } else {
+                noBtn.classList.remove('runaway');
+                noBtn.style.position = 'static';
+            }
+        }
+
+        // Evet Butonuna Basıldığında
+        function nextQuestion() {
+            if (currentQuestionIndex < 9) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                // 10. soruya da evet verilirse son ekran
+                document.getElementById('questionCard').style.display = 'none';
+                document.getElementById('successScreen').style.display = 'block';
+                // Havai fişek etkisi gibi ekstra kalpler fırlat
+                createHearts();
+                createHearts();
+            }
+        }
+
+        // Hayır Butonundan Kaçma Fonksiyonu (Sadece 10. Soruda)
+        function escapeButton() {
+            if (currentQuestionIndex !== 9) {
+                // İlk 9 soruda hayır derse ısrar etmeden bir sonraki soruya geçebilir veya aynı soruda tutabilirsin.
+                // İlerlemeyi engellememek için ilk 9 soruda da sonraki soruya geçiriyoruz.
+                currentQuestionIndex++;
+                showQuestion();
+                return;
+            }
+
+            // 10. Soruda ise buton kaçar ve her tıkta/üzerine gelişte ısrar cümlesi değişir
+            const noBtn = document.getElementById('noBtn');
+            
+            // Rastgele koordinatlar (Ekran sınırları dahilinde)
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
+            // Ekranda ısrar cümlesini göster
+            document.getElementById('questionText').innerText = insistPhrases[insistIndex];
+            
+            insistIndex = (insistIndex + 1) % insistPhrases.length;
+        }
+    </script>
+</body>
+</html>
