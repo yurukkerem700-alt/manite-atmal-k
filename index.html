@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ebrar'a Özel ❤️</title>
+    <title>Sadece Sana ❤️</title>
     <style>
         * {
             box-sizing: border-box;
@@ -268,17 +268,17 @@
 
         <!-- Soru Kartı -->
         <div class="card" id="questionCard">
-            <div class="progress" id="progressText">Soru 1 / 10</div>
+            <div class="progress" id="progressText">Soru 1 / 15</div>
             <h2 id="questionText">Soru buraya gelecek?</h2>
             <div class="btn-group">
                 <button class="btn btn-yes" id="yesBtn" onclick="nextQuestion()">Evet</button>
-                <button class="btn btn-no" id="noBtn" onmouseover="escapeButton()" onclick="escapeButton()">Hayır</button>
+                <button class="btn btn-no" id="noBtn" onmouseenter="escapeButton()" ontouchstart="escapeButton(event)" onclick="escapeButton(event)">Hayır</button>
             </div>
         </div>
 
         <!-- Son Ekran -->
         <div class="success-screen" id="successScreen">
-            <h1>Seni Çok Seviyorum Ebrar! ❤️</h1>
+            <h1>Seni Çok Seviyorum! ❤️</h1>
             <p>Dünyanın en mutlu insanı yaptın beni. İyi ki varsın, hayatımın anlamı!</p>
         </div>
     </div>
@@ -286,23 +286,28 @@
     <script>
         // Sorular Listesi
         const questions = [
-            "Benimle vakit geçirmeyi seviyor musun Ebrar? 😊",
+            "Benimle vakit geçirmeyi seviyor musun? 😊",
             "Sence de birlikte çok eğleniyor muyuz? 🍕",
             "Sana her baktığımda içimin eridiğinin farkında mısın? 🥺",
             "Birlikte daha çok anı biriktirelim mi? 📸",
             "Attığım saçma mesajlara bile gülebiliyor musun? 🤭",
-            "Hayatında olduğum için azıcık da olsa mutlu musun? ✨",
-            "Seninle uzun uzun yürüyüşler yapalım mı? 🌙",
+            "Hayatında olduğum için mutlu musun? ✨",
+            "Seninle uzun yürüyüşler yapalım mı? 🌙",
             "En sevdiğin insan listesinde ilk sıralarda mıyım? 🥇",
             "Seni her gün daha çok seveceğime inanıyor musun? 🌹",
-            "Ebrar, benimle sevgili olur musun? ❤️" // 10. Soru
+            "Birlikte yeni yerler keşfedelim mi? 🗺️",
+            "En güzel anılarımızı çoğaltalım mı? 🎞️",
+            "Bazen aklına geldiğimde gülümsüyor musun? 💭",
+            "Her gün sana güzel bir sebep sunabilir miyim? 🌷",
+            "Kalbinde bana küçük bir yer var mı? 💌",
+            "Sadece sana ait bir hikâye yazalım mı? ❤️"
         ];
 
         // Israr Cümleleri (Son soruda hayıra tıklanmaya çalışılırsa çıkacak)
         const insistPhrases = [
             "Yaa kaçma benden, Evet de! 🥺",
             "Hayır butonunu kilitledim ki, boşuna uğraşma! 😜",
-            "Ebrar lütfen ama, kaderimiz bu bizim! ✨",
+            "Lütfen ama, kaderimiz bu bizim! ✨",
             "Bu butonun senden kaçtığı kadar ben de sana koşuyorum! 💕",
             "Yaaa bir şans ver ama, çok mutlu olacağız! 🌹",
             "Hayır seçeneği teknik olarak devre dışı bırakıldı! 🥰"
@@ -365,22 +370,19 @@
 
         // Soru Gösterimi
         function showQuestion() {
-            document.getElementById('progressText').innerText = `Soru ${currentQuestionIndex + 1} / 10`;
+            document.getElementById('progressText').innerText = `Soru ${currentQuestionIndex + 1} / ${questions.length}`;
             document.getElementById('questionText').innerText = questions[currentQuestionIndex];
             
-            // Son soruda değilse hayır butonu normal durur, son soruda kaçmaya başlar
+            // Hayır butonu her soruda kaçabilir; dokunmatik ekranlarda da aynı davranır.
             const noBtn = document.getElementById('noBtn');
-            if (currentQuestionIndex === 9) {
-                noBtn.classList.add('runaway');
-            } else {
-                noBtn.classList.remove('runaway');
-                noBtn.style.position = 'static';
-            }
+            noBtn.classList.add('runaway');
+            noBtn.style.left = 'calc(50% + 35px)';
+            noBtn.style.top = 'calc(50% + 95px)';
         }
 
         // Evet Butonuna Basıldığında
         function nextQuestion() {
-            if (currentQuestionIndex < 9) {
+            if (currentQuestionIndex < questions.length - 1) {
                 currentQuestionIndex++;
                 showQuestion();
             } else {
@@ -394,16 +396,8 @@
         }
 
         // Hayır Butonundan Kaçma Fonksiyonu (Sadece 10. Soruda)
-        function escapeButton() {
-            if (currentQuestionIndex !== 9) {
-                // İlk 9 soruda hayır derse ısrar etmeden bir sonraki soruya geçebilir veya aynı soruda tutabilirsin.
-                // İlerlemeyi engellememek için ilk 9 soruda da sonraki soruya geçiriyoruz.
-                currentQuestionIndex++;
-                showQuestion();
-                return;
-            }
-
-            // 10. Soruda ise buton kaçar ve her tıkta/üzerine gelişte ısrar cümlesi değişir
+        function escapeButton(event) {
+            event?.preventDefault();
             const noBtn = document.getElementById('noBtn');
             
             // Rastgele koordinatlar (Ekran sınırları dahilinde)
