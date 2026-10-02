@@ -24,6 +24,38 @@
         }
 
         /* Arka Plan Efektleri */
+        .pixel-heart-field {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        .pixel {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 2px;
+            background: #ff4d6d;
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.35);
+            transform: translate(var(--start-x), var(--start-y)) scale(0.35);
+            animation: pixelToHeart 8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes pixelToHeart {
+            0%, 15% {
+                opacity: 0;
+                transform: translate(var(--start-x), var(--start-y)) scale(0.35);
+            }
+            35% { opacity: 0.75; }
+            75%, 100% {
+                opacity: 0.3;
+                transform: translate(var(--heart-x), var(--heart-y)) scale(1);
+            }
+        }
+
         .heart-particle {
             position: absolute;
             color: #ff4d6d;
@@ -33,25 +65,11 @@
             z-index: 1;
         }
 
-        .flower-particle {
-            position: absolute;
-            font-size: 28px;
-            pointer-events: none;
-            animation: flowerUp 6s linear infinite;
-            bottom: -50px;
-            z-index: 1;
-        }
-
         @keyframes floatUp {
             0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 1; }
             100% { transform: translateY(-10vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
 
-        @keyframes flowerUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
-            100% { transform: translateY(-110vh) rotate(180deg); opacity: 0; }
-        }
 
         /* Ana Konteyner */
         .container {
@@ -257,6 +275,7 @@
     </style>
 </head>
 <body>
+    <div class="pixel-heart-field" id="pixelHeartField" aria-hidden="true"></div>
 
     <div class="container" id="mainContainer">
         <!-- Zarf Yapısı -->
@@ -278,8 +297,8 @@
 
         <!-- Son Ekran -->
         <div class="success-screen" id="successScreen">
-            <h1>Seni Çok Seviyorum! ❤️</h1>
-            <p>Dünyanın en mutlu insanı yaptın beni. İyi ki varsın, hayatımın anlamı!</p>
+            <h1>İyi ki varsın. ❤️</h1>
+            <p>Bu güzel hikâyeyi birlikte büyütelim. Gülümsemen her şeye değer.</p>
         </div>
     </div>
 
@@ -318,8 +337,8 @@
 
         // Sayfa açıldığında otomatik kalpler ve çiçekler fırlatır
         window.onload = function() {
+            createPixelHeart();
             createHearts();
-            createFlowers();
         };
 
         function createHearts() {
@@ -337,19 +356,34 @@
             }
         }
 
-        function createFlowers() {
-            const flowers = ['🌸', '🌹', '🌺', '🌷', '💐'];
-            setInterval(() => {
-                const flower = document.createElement('div');
-                flower.classList.add('flower-particle');
-                flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
-                flower.style.left = Math.random() * 100 + 'vw';
-                flower.style.animationDuration = (Math.random() * 4 + 4) + 's';
-                document.body.appendChild(flower);
+        function createPixelHeart() {
+            const field = document.getElementById('pixelHeartField');
+            const heartShape = [
+                '01100110',
+                '11111111',
+                '11111111',
+                '01111110',
+                '00111100',
+                '00011000'
+            ];
 
-                setTimeout(() => flower.remove(), 7000);
-            }, 300);
+            heartShape.forEach((row, rowIndex) => {
+                [...row].forEach((cell, columnIndex) => {
+                    if (cell !== '1') return;
+                    const pixel = document.createElement('span');
+                    pixel.className = 'pixel';
+                    pixel.style.setProperty('--start-x', `${Math.random() * 100 - 50}vw`);
+                    pixel.style.setProperty('--start-y', `${Math.random() * 100 - 50}vh`);
+                    pixel.style.setProperty('--heart-x', `${(columnIndex - 3.5) * 7}px`);
+                    pixel.style.setProperty('--heart-y', `${(rowIndex - 2.5) * 7}px`);
+                    pixel.style.left = '50%';
+                    pixel.style.top = '50%';
+                    pixel.style.setProperty('--delay', `${Math.random() * 3}s`);
+                    field.appendChild(pixel);
+                });
+            });
         }
+
 
         // Zarf Açılma İşlemi
         function openEnvelope() {
